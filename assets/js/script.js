@@ -1,56 +1,38 @@
-//var searchHistory = [];
-//var weatherApiRootUrl = "https://openweathermap.org";
-//var weatherApiKey = "56888a7e0182e386acab59c0a5ef93ab";
+var key = '56888a7e0182e386acab59c0a5ef93ab';
 
-//var searchForm = document.querySelector("#search-form");
-//var searchInput = document.querySelector("#search-input");
-//var todayContainer = document.querySelector("#today");
-//var forcastContainer = document.querySelector("#forcast");
-//var searchHistoryContainer = document.querySelector("#history");
+function weatherForecast(city) {
+    fetch('https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + key)  
+    .then(function(resp) {
+        return resp.json() 
+    })
+    .then(function(data) {
+        console.log('--->'+(JSON.stringify(data)));
+        drawForecast(data);
+    })
+    .catch(function() {
+        // catch any errors
+    });
+}
 
-//timezones
-//
-//
+function drawForecast( d ) {
+    var celcius = Math.round(parseFloat(d.main.temp)-273.15);
+    var fahrenheit = Math.round(((parseFloat(d.main.temp)-273.15)*1.8)+32);
+    var description = d.weather[0].description; 
+    
+    document.getElementById('description').innerHTML = description;
+    document.getElementById('temp').innerHTML = fahrenheit + '&deg;';
+    document.getElementById('location').innerHTML = d.name+' '+d.sys.country;
+}
 
-//function renderSearchHistory() {
-    //searchHistoryContainer.innerHTML = "";
+//Event Listeners on button click
+document.addEventListener("DOMContentLoaded", () => {
+    // Handling button click
+    document.querySelector(".button-search").addEventListener("click", () => {
+        var searchedCity = document.querySelector('.text-search');
+        console.log(searchedCity.value);
+        if(searchedCity.value){
+            weatherForecast(searchedCity.value);
+        }       
+   }) 
+ });
 
-    //for (var i = searchHistory.length - 1; i >= 0; i++) {
-        //var btn = document.createElement("button");
-        //btn.setAttribute("type", "button");
-        //btn.setAttribute("aria-controls", "button");
-        //btn.classList.add("history-btn", "btn-history");
-
-        //btn.setAttribute("data-search", searchHistory[i]);
-        //btn.textContent = searchHistory[i];
-        //searchHistoryContainer.append(btn);
-    //}
-//}
-
-// Function to make an API request and save the response in local storage
-function fetchWeatherData() {
-    // Your OpenWeather API key
-    const apiKey = '56888a7e0182e386acab59c0a5ef93ab';
-  
-    // Make a request to the OpenWeather API
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=YOUR_LOCATION&appid=${apiKey}`)
-      .then(response => response.json())
-      .then(data => {
-        // Save the weather data in local storage
-        localStorage.setItem('weatherData', JSON.stringify(data));
-        console.log('Weather data saved in local storage:', data);
-      })
-      .catch(error => {
-        console.error('Error fetching weather data:', error);
-      });
-  }
-  
-  // Check if weather data exists in local storage
-  const weatherData = localStorage.getItem('weatherData');
-  if (weatherData) {
-    console.log('Weather data found in local storage:', JSON.parse(weatherData));
-  } else {
-    console.log('Weather data not found in local storage. Fetching from API...');
-    fetchWeatherData();
-  }
-  
