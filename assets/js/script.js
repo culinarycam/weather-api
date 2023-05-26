@@ -45,7 +45,7 @@ function getForecast(lat, lon, city) {
         for (var i = 0; i < data.list.length; i++) {
             if (i % 8 === 2) {
                 var containerEl = document.createElement('div');
-                    containerEl.setAttribute('id', 'five-day-container');
+                    containerEl.setAttribute('id', 'five-day-container'); 
                     fiveDayEl.appendChild(containerEl);
                     var cardEl = document.createElement('div');
                     cardEl.setAttribute('class', 'card');
@@ -95,4 +95,8 @@ searchForm.addEventListener("submit", function(event) {
     var city = cityEl.value.trim();
 
     getGeo(city);
+
+    localStorage.setItem(cityEl, city);
+    localStorage.getItem(cityEl);
 });
+
